@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Long Polling</title>
+</head>
+<body>
+    <h1>Long Polling</h1>
+    <div id="long-polling"></div>
+    <script>
+        async function longPolling(lastData=undefined) {
+            const data = await fetch(`/get-data?lastData=${lastData}`);
+            if (!data.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const response = await data.json();
+            document.getElementById('long-polling').innerHTML = response.data;
+            // Call longPolling again to keep the connection open
+            longPolling(response.data); // Pass the new data to the next request
+        }
+
+        longPolling(); // Start long polling on page load
+    </script>
+</body>
+</html>
